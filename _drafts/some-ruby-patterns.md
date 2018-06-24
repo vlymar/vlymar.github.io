@@ -1,13 +1,13 @@
 ---
-layout: post
 title: "Some Ruby Patterns"
+layout: post
 date: 2018-05-16
 ---
 > Then they come up to me and say, "I was surprised by this feature of the language, so therefore Ruby violates the principle of least surprise." Wait. Wait. The principle of least surprise is not for you only. The principle of least surprise means principle of least my surprise. And it means the principle of least surprise after you learn Ruby very well.
 
-> \- Yukihiro Matsumoto ([https://www.artima.com/intv/ruby4.html][1])
+> - Yukihiro Matsumoto ([https://www.artima.com/intv/ruby4.html](https://www.artima.com/intv/ruby4.html))
 
-Over 4 years of working with Ruby I've picked up a fair number of conventions, tricks and footguns. Here are a few I wish I knew when I was getting started.
+Here are some patterns I've picked up over 4 years of working with Ruby in production.
 
 ---
 
@@ -16,15 +16,15 @@ Commonly used to assign a variable who's current value is nil. Takes advantage o
 
 ```ruby
 foo = nil
-foo ||= 1
-foo ||= 2 # does not assign 2
-foo == 1 #=> true
+foo ||= 1 #=> 1
+foo ||= 2 #=> 1
+foo == 1  #=> true
 ```
 
-Related: `&&=`.
+See also: `&&=`.
 
 ### Converting symbols to procs
-One of the less immediately intuitive keywords in Ruby is `&:symbol`, which is a shorthand for `Symbol#to_proc` ([documentation][2]). 
+One of the less intuitive patterns in Ruby is `&:symbol`, which is shorthand for `Symbol#to_proc` ([documentation]([https://ruby-doc.org/core-2.5.1/Symbol.html#method-i-to%5C_proc])). 
 
 ```ruby
 [1, 2, 3].map(&:to_s) #=> ["1", "2", "3"]
@@ -35,34 +35,158 @@ One of the less immediately intuitive keywords in Ruby is `&:symbol`, which is a
 [1, 2, 3].select { |i| i.even? } #=> [2]
 ```
 
-`Symbol#to_proc`  returns a `Proc` that accepts a single argument and then calls the method named by the symbol on that argument.
+Prefixing an object with `&` calls `to_proc` on that object. `Symbol#to_proc` returns a `Proc` that accepts a single argument and then calls the method named by the symbol on that argument.
 
 ### Bootstrapping classes with `Struct`
 ```ruby
 # Variant 1
 Car = Struct.new(:make, :model)
 
+rental = Car.new('Honda', 'CRV')
+rental.make  #=> 'Honda'
+rental.model #=> 'CRV'
+
 # Variant 2
+require 'date'
+
 class Person < Struct.new(:name, :birthdate)
   def birth_year
-    @birthdate.year
+	birthdate.year
   end
 end
+
+bob = Person.new('Bob', Date.new(1984, 01, 02))
+bob.birth_year #=> 1984
 ```
 
-### `&&` vs `and`, `||` vs `or`
-When I was mentoring interns at Scribd, a common issue was use of `and` and `or` (particularly with developers with Python backgrounds).
-TODO
+Inheriting from a Struct can save you some boilerplate involved with reading and writing attributes ([documentation](https://ruby-doc.org/core-2.4.2/Struct.html)).
 
-### `class << self`
-TODO: reopening class
+### Splats
 
-### `*`
-TODO: array expansion
+Here's an example of the `*` (splat) operator used for array expansion
+
 ```ruby
+# Array expansion
 a = [1, 2]
 b = [0, *a] # => [0, 1, 2]
+
+def foo(a, b)
+  "#{a}, #{b}"
+end
+
+c = [1, 2]
+foo(*c) #=> "1, 2]
+
+# double splat
+
+def bar(a:, b:)
+  "#{a}, #{b}"
+end
+
+d = { a: 1, b: 2 }
+bar(**d) #=> "1, 2"
 ```
 
-[1]:	https://www.artima.com/intv/ruby4.html
-[2]:	[https://ruby-doc.org/core-2.5.1/Symbol.html#method-i-to%5C_proc]
+This is just a couple of ways splats can be used, see [this great post](http://blog.honeybadger.io/ruby-splat-array-manipulation-destructuring/) for more examples.
+ 
+### `&&` vs `and`, `||` vs `or`
+A common pitfall for those with a Python background is misuse of the `and`, `or` keywords. At first glance they appear to have the same behavior as `&&` and `||`, but they actually have lower precedence which can lead to surprising behavior. Here's a simple demo:
+
+```ruby
+x = true && false #=> false
+x #=> false
+
+y = true and false #=> false
+y #=> true
+```
+
+Note that `x` is false and `y` is true. Take a look at the [ruby operator precedence](https://ruby-doc.org/core-2.4.2/doc/syntax/precedence_rdoc.html) docs. Note that `or, and` are lower than `=`, which is lower than `||` and `&&`. If you're unfamiliar with programming language operator precedence think of [PEMDAS](https://en.wikipedia.org/wiki/Order_of_operations). When I get confused about precedence, I like to wrap operations in parenthesis so I can visualize the order things happen in. Here's the above example with parenthesis added to make it clear in what order things are happening:
+
+```ruby
+# `&&` has a higher precedence than `=`, so its evaluated first
+x = (true && false)
+
+# `=` has a higher precedence than `end`, so its evaluated first
+(y = true) and false
+```
+
+Why does Ruby have these super low precedence boolean operators? They're sometimes used for program _control flow_. Check out the [render and return Rails pattern](http://guides.rubyonrails.org/layouts_and_rendering.html#avoiding-double-render-errors).
+
+### Eigenclasses and @@
+
+```ruby
+class Foo
+  class << self
+    def bar
+      1
+    end
+  end
+end
+
+Foo.bar #=> 1
+```
+
+You probably know `<<` as the shovel operator, useful for inserting objects into arrays (`[1, 2] << 3`). Seeing the strange `class << self` notation can be quite confusing, and the jargon associated with it (eigenclass, singleton class, metaclass) can be overwhelming. A good starting point is to know that this syntax lets you implement class methods. My above example can be rewritten as:
+
+```ruby
+class Foo
+  def self.bar
+    1
+  end
+end
+
+Foo.bar #=> 1
+```
+
+There's a lot to discuss on this subject but I want to focus on a very practical question: when do Rubyists use one form over the other? The key for me is `@@`. You've probably seen these used for "class variables."
+
+Here's an abstract example demonstrating the pitfalls of using `@@` for class variables:
+
+```ruby
+class ParentClass
+  def self.set_count(count)
+    @@count = count
+  end
+  
+  def self.count
+    @@count
+  end
+end
+
+ParentClass.set_count(3)
+ParentClass.count #=> 3
+
+class ChildClass < ParentClass; end
+
+ChildClass.set_count(10)
+ParentClass.count #=> 10
+```
+
+Did you expect calling `set_count` on the `Child` class to update the count in the `Parent` class? `@@` variables aren't class variables, they're _class heirarchy variables_. They almost behave more like a global variables across the class hierarchy than as a class variable.
+
+So what do you do if you want class variable semantics in ruby?
+
+```ruby
+class ParentClass
+  class << self
+    def set_count(count)
+      @count = count
+    end
+
+    def count
+      @count
+    end
+  end
+end
+
+ParentClass.set_count(3)
+ParentClass.count #=> 3
+
+class ChildClass < ParentClass; end
+
+ChildClass.set_count(10)
+ParentClass.count #=> 3
+ChildClass.count #=> 10
+```
+
+There's a ton of great content out their explaining eigenclasses. Here's a good place to start: [https://www.devalot.com/articles/2008/09/ruby-singleton](https://www.devalot.com/articles/2008/09/ruby-singleton)

@@ -25,10 +25,12 @@
 </blockquote>
 
 <blockquote>
-  <p>- Yukihiro Matsumoto (<a href="https://www.artima.com/intv/ruby4.html">https://www.artima.com/intv/ruby4.html</a>)</p>
+  <ul>
+    <li>Yukihiro Matsumoto (<a href="https://www.artima.com/intv/ruby4.html">https://www.artima.com/intv/ruby4.html</a>)</li>
+  </ul>
 </blockquote>
 
-<p>Over 4 years of working with Ruby I’ve picked up a fair number of conventions, tricks and footguns. Here are a few I wish I knew when I was getting started.</p>
+<p>Here are some patterns I’ve picked up over 4 years of working with Ruby in production.</p>
 
 <hr />
 
@@ -40,15 +42,15 @@
 3
 4
 </pre></td><td class="rouge-code"><pre><span class="n">foo</span> <span class="o">=</span> <span class="kp">nil</span>
-<span class="n">foo</span> <span class="o">||=</span> <span class="mi">1</span>
-<span class="n">foo</span> <span class="o">||=</span> <span class="mi">2</span> <span class="c1"># does not assign 2</span>
-<span class="n">foo</span> <span class="o">==</span> <span class="mi">1</span> <span class="c1">#=&gt; true</span>
+<span class="n">foo</span> <span class="o">||=</span> <span class="mi">1</span> <span class="c1">#=&gt; 1</span>
+<span class="n">foo</span> <span class="o">||=</span> <span class="mi">2</span> <span class="c1">#=&gt; 1</span>
+<span class="n">foo</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1">#=&gt; true</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>Related: <code class="highlighter-rouge">&amp;&amp;=</code>.</p>
+<p>See also: <code class="highlighter-rouge">&amp;&amp;=</code>.</p>
 
 <h3 id="converting-symbols-to-procs">Converting symbols to procs</h3>
-<p>One of the less immediately intuitive keywords in Ruby is <code class="highlighter-rouge">&amp;:symbol</code>, which is a shorthand for <code class="highlighter-rouge">Symbol#to_proc</code> (<a href="[https://ruby-doc.org/core-2.5.1/Symbol.html#method-i-to%5C_proc]">documentation</a>).</p>
+<p>One of the less intuitive patterns in Ruby is <code class="highlighter-rouge">&amp;:symbol</code>, which is shorthand for <code class="highlighter-rouge">Symbol#to_proc</code> (<a href="[https://ruby-doc.org/core-2.5.1/Symbol.html#method-i-to%5C_proc]">documentation</a>).</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -64,7 +66,7 @@
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">].</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="p">.</span><span class="nf">even?</span> <span class="p">}</span> <span class="c1">#=&gt; [2]</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p><code class="highlighter-rouge">Symbol#to_proc</code>  returns a <code class="highlighter-rouge">Proc</code> that accepts a single argument and then calls the method named by the symbol on that argument.</p>
+<p>Prefixing an object with <code class="highlighter-rouge">&amp;</code> calls <code class="highlighter-rouge">to_proc</code> on that object. <code class="highlighter-rouge">Symbol#to_proc</code> returns a <code class="highlighter-rouge">Proc</code> that accepts a single argument and then calls the method named by the symbol on that argument.</p>
 
 <h3 id="bootstrapping-classes-with-struct">Bootstrapping classes with <code class="highlighter-rouge">Struct</code></h3>
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
@@ -76,32 +78,241 @@
 7
 8
 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
 </pre></td><td class="rouge-code"><pre><span class="c1"># Variant 1</span>
 <span class="no">Car</span> <span class="o">=</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:make</span><span class="p">,</span> <span class="ss">:model</span><span class="p">)</span>
 
+<span class="n">rental</span> <span class="o">=</span> <span class="no">Car</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Honda'</span><span class="p">,</span> <span class="s1">'CRV'</span><span class="p">)</span>
+<span class="n">rental</span><span class="p">.</span><span class="nf">make</span>  <span class="c1">#=&gt; 'Honda'</span>
+<span class="n">rental</span><span class="p">.</span><span class="nf">model</span> <span class="c1">#=&gt; 'CRV'</span>
+
 <span class="c1"># Variant 2</span>
+<span class="nb">require</span> <span class="s1">'date'</span>
+
 <span class="k">class</span> <span class="nc">Person</span> <span class="o">&lt;</span> <span class="no">Struct</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:birthdate</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">birth_year</span>
-    <span class="vi">@birthdate</span><span class="p">.</span><span class="nf">year</span>
+	<span class="n">birthdate</span><span class="p">.</span><span class="nf">year</span>
   <span class="k">end</span>
 <span class="k">end</span>
+
+<span class="n">bob</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Bob'</span><span class="p">,</span> <span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">1984</span><span class="p">,</span> <span class="mo">01</span><span class="p">,</span> <span class="mo">02</span><span class="p">))</span>
+<span class="n">bob</span><span class="p">.</span><span class="nf">birth_year</span> <span class="c1">#=&gt; 1984</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<h3 id="-vs-and--vs-or"><code class="highlighter-rouge">&amp;&amp;</code> vs <code class="highlighter-rouge">and</code>, <code class="highlighter-rouge">||</code> vs <code class="highlighter-rouge">or</code></h3>
-<p>When I was mentoring interns at Scribd, a common issue was use of <code class="highlighter-rouge">and</code> and <code class="highlighter-rouge">or</code> (particularly with developers with Python backgrounds).
-TODO</p>
+<p>Inheriting from a Struct can save you some boilerplate involved with reading and writing attributes (<a href="https://ruby-doc.org/core-2.4.2/Struct.html">documentation</a>).</p>
 
-<h3 id="class--self"><code class="highlighter-rouge">class &lt;&lt; self</code></h3>
-<p>TODO: reopening class</p>
+<h3 id="splats">Splats</h3>
 
-<h3><code class="highlighter-rouge">*</code></h3>
-<p>TODO: array expansion</p>
+<p>Here’s an example of the <code class="highlighter-rouge">*</code> (splat) operator used for array expansion</p>
+
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
-</pre></td><td class="rouge-code"><pre><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre><span class="c1"># Array expansion</span>
+<span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">]</span> <span class="c1"># =&gt; [0, 1, 2]</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+  <span class="s2">"</span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">, </span><span class="si">#{</span><span class="n">b</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">foo</span><span class="p">(</span><span class="o">*</span><span class="n">c</span><span class="p">)</span> <span class="c1">#=&gt; "1, 2]</span>
+
+<span class="c1"># double splat</span>
+
+<span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="n">a</span><span class="p">:,</span> <span class="n">b</span><span class="p">:)</span>
+  <span class="s2">"</span><span class="si">#{</span><span class="n">a</span><span class="si">}</span><span class="s2">, </span><span class="si">#{</span><span class="n">b</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">a: </span><span class="mi">1</span><span class="p">,</span> <span class="ss">b: </span><span class="mi">2</span> <span class="p">}</span>
+<span class="n">bar</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span> <span class="c1">#=&gt; "1, 2"</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
+<p>This is just a couple of ways splats can be used, see <a href="http://blog.honeybadger.io/ruby-splat-array-manipulation-destructuring/">this great post</a> for more examples.</p>
+
+<h3 id="-vs-and--vs-or"><code class="highlighter-rouge">&amp;&amp;</code> vs <code class="highlighter-rouge">and</code>, <code class="highlighter-rouge">||</code> vs <code class="highlighter-rouge">or</code></h3>
+<p>A common pitfall for those with a Python background is misuse of the <code class="highlighter-rouge">and</code>, <code class="highlighter-rouge">or</code> keywords. At first glance they appear to have the same behavior as <code class="highlighter-rouge">&amp;&amp;</code> and <code class="highlighter-rouge">||</code>, but they actually have lower precedence which can lead to surprising behavior. Here’s a simple demo:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="n">x</span> <span class="o">=</span> <span class="kp">true</span> <span class="o">&amp;&amp;</span> <span class="kp">false</span> <span class="c1">#=&gt; false</span>
+<span class="n">x</span> <span class="c1">#=&gt; false</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="kp">true</span> <span class="n">and</span> <span class="kp">false</span> <span class="c1">#=&gt; false</span>
+<span class="n">y</span> <span class="c1">#=&gt; true</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Note that <code class="highlighter-rouge">x</code> is false and <code class="highlighter-rouge">y</code> is true. Take a look at the <a href="https://ruby-doc.org/core-2.4.2/doc/syntax/precedence_rdoc.html">ruby operator precedence</a> docs. Note that <code class="highlighter-rouge">or, and</code> are lower than <code class="highlighter-rouge">=</code>, which is lower than <code class="highlighter-rouge">||</code> and <code class="highlighter-rouge">&amp;&amp;</code>. If you’re unfamiliar with programming language operator precedence think of <a href="https://en.wikipedia.org/wiki/Order_of_operations">PEMDAS</a>. When I get confused about precedence, I like to wrap operations in parenthesis so I can visualize the order things happen in. Here’s the above example with parenthesis added to make it clear in what order things are happening:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="c1"># `&amp;&amp;` has a higher precedence than `=`, so its evaluated first</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="kp">true</span> <span class="o">&amp;&amp;</span> <span class="kp">false</span><span class="p">)</span>
+
+<span class="c1"># `=` has a higher precedence than `end`, so its evaluated first</span>
+<span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="kp">true</span><span class="p">)</span> <span class="n">and</span> <span class="kp">false</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Why does Ruby have these super low precedence boolean operators? They’re sometimes used for program <em>control flow</em>. Check out the <a href="http://guides.rubyonrails.org/layouts_and_rendering.html#avoiding-double-render-errors">render and return Rails pattern</a>.</p>
+
+<h3 id="eigenclasses-and-">Eigenclasses and @@</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Foo</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">bar</span>
+      <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Foo</span><span class="p">.</span><span class="nf">bar</span> <span class="c1">#=&gt; 1</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>You probably know <code class="highlighter-rouge">&lt;&lt;</code> as the shovel operator, useful for inserting objects into arrays (<code class="highlighter-rouge">[1, 2] &lt;&lt; 3</code>). Seeing the strange <code class="highlighter-rouge">class &lt;&lt; self</code> notation can be quite confusing, and the jargon associated with it (eigenclass, singleton class, metaclass) can be overwhelming. A good starting point is to know that this syntax lets you implement class methods. My above example can be rewritten as:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Foo</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">bar</span>
+    <span class="mi">1</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Foo</span><span class="p">.</span><span class="nf">bar</span> <span class="c1">#=&gt; 1</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>There’s a lot to discuss on this subject but I want to focus on a very practical question: when do Rubyists use one form over the other? The key for me is <code class="highlighter-rouge">@@</code>. You’ve probably seen these used for “class variables.”</p>
+
+<p>Here’s an abstract example demonstrating the pitfalls of using <code class="highlighter-rouge">@@</code> for class variables:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">ParentClass</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">set_count</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+    <span class="vc">@@count</span> <span class="o">=</span> <span class="n">count</span>
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">count</span>
+    <span class="vc">@@count</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">ParentClass</span><span class="p">.</span><span class="nf">set_count</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="no">ParentClass</span><span class="p">.</span><span class="nf">count</span> <span class="c1">#=&gt; 3</span>
+
+<span class="k">class</span> <span class="nc">ChildClass</span> <span class="o">&lt;</span> <span class="no">ParentClass</span><span class="p">;</span> <span class="k">end</span>
+
+<span class="no">ChildClass</span><span class="p">.</span><span class="nf">set_count</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="no">ParentClass</span><span class="p">.</span><span class="nf">count</span> <span class="c1">#=&gt; 10</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Did you expect calling <code class="highlighter-rouge">set_count</code> on the <code class="highlighter-rouge">Child</code> class to update the count in the <code class="highlighter-rouge">Parent</code> class? <code class="highlighter-rouge">@@</code> variables aren’t class variables, they’re <em>class heirarchy variables</em>. They almost behave more like a global variables across the class hierarchy than as a class variable.</p>
+
+<p>So what do you do if you want class variable semantics in ruby?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">ParentClass</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">set_count</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+      <span class="vi">@count</span> <span class="o">=</span> <span class="n">count</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">count</span>
+      <span class="vi">@count</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">ParentClass</span><span class="p">.</span><span class="nf">set_count</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="no">ParentClass</span><span class="p">.</span><span class="nf">count</span> <span class="c1">#=&gt; 3</span>
+
+<span class="k">class</span> <span class="nc">ChildClass</span> <span class="o">&lt;</span> <span class="no">ParentClass</span><span class="p">;</span> <span class="k">end</span>
+
+<span class="no">ChildClass</span><span class="p">.</span><span class="nf">set_count</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="no">ParentClass</span><span class="p">.</span><span class="nf">count</span> <span class="c1">#=&gt; 3</span>
+<span class="no">ChildClass</span><span class="p">.</span><span class="nf">count</span> <span class="c1">#=&gt; 10</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>There’s a ton of great content out their explaining eigenclasses. Here’s a good place to start: <a href="https://www.devalot.com/articles/2008/09/ruby-singleton">https://www.devalot.com/articles/2008/09/ruby-singleton</a></p>
 
     </div>
 
