@@ -10,6 +10,12 @@ body {
   padding: 0 10px;
 }
 
+header {
+  a {
+    color: inherit;
+  }
+}
+
 h1, h2, h3 {
   font-family: sans-serif;
 }
