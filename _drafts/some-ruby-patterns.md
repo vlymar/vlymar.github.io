@@ -8,10 +8,12 @@ date: 2018-05-16
 
 Here are some patterns I've picked up over 4 years of working with Ruby in production.
 
+<!--more-->
+
 ---
 
 ### Or-Equals (`||=`)
-Commonly used to assign a variable who's current value is nil. Takes advantage of the fact that `nil` evaluates as `false` in Ruby.
+Commonly used to conditionally assign a variable who's current value is nil. Takes advantage of the fact that `nil` evaluates as `false` in Ruby.
 
 ```ruby
 foo = nil

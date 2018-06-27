@@ -1,5 +1,7 @@
 exclude: ['README.md']
 
+excerpt_separator: "<!--more-->"
+
 markdown: kramdown
 
 highlighter: rouge
