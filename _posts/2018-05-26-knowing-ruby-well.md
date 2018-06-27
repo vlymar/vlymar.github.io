@@ -1,12 +1,12 @@
 ---
-title: "Knowing Ruby Well"
+title: 'Knowing Ruby Well'
 layout: post
 date: 2018-05-26
 ---
 > Then they come up to me and say, "I was surprised by this feature of the language, so therefore Ruby violates the principle of least surprise." Wait. Wait. The principle of least surprise is not for you only. The principle of least surprise means principle of least my surprise. And it means the principle of least surprise after you learn Ruby very well.
 >  - Yukihiro Matsumoto [[source](https://www.artima.com/intv/ruby4.html)]
 
-Here are some patterns I've picked up over 4 years of working with Ruby in production.
+Here's a grab bag of patterns I've picked up over 4 years of working with Ruby.
 
 <!--more-->
 
@@ -60,11 +60,11 @@ bob = Person.new('Bob', Date.new(1984, 01, 02))
 bob.birth_year #=> 1984
 ```
 
-Inheriting from a Struct can save you some boilerplate involved with reading and writing attributes ([documentation](https://ruby-doc.org/core-2.4.2/Struct.html)).
+Inheriting from a Struct can save you some of the boilerplate associated with reading and writing attributes ([documentation](https://ruby-doc.org/core-2.4.2/Struct.html)).
 
 ### Splats
 
-Here's an example of the `*` (splat) operator used for array expansion
+Here's an example of the `*` (splat) operator used for array expansion:
 
 ```ruby
 # Array expansion
@@ -88,10 +88,10 @@ d = { a: 1, b: 2 }
 bar(**d) #=> "1, 2"
 ```
 
-This is just a couple of ways splats can be used, see [this great post](http://blog.honeybadger.io/ruby-splat-array-manipulation-destructuring/) for more examples.
+This is just a taste of how splats can be used. See [this great post](http://blog.honeybadger.io/ruby-splat-array-manipulation-destructuring/) for more.
  
 ### `&&` vs `and`, `||` vs `or`
-A common pitfall for those with a Python background is misuse of the `and`, `or` keywords. At first glance they appear to have the same behavior as `&&` and `||`, but they actually have lower precedence which can lead to surprising behavior. Here's a simple demo:
+A common pitfall for those with a Python background is misuse of the `and`, `or` keywords. At first glance they appear to have the same behavior as `&&` and `||`, but they actually have lower precedence which can lead to surprising behavior. Here's a demo:
 
 ```ruby
 x = true && false #=> false
@@ -101,7 +101,7 @@ y = true and false #=> false
 y #=> true
 ```
 
-Note that `x` is false and `y` is true. Take a look at the [ruby operator precedence](https://ruby-doc.org/core-2.4.2/doc/syntax/precedence_rdoc.html) docs. Note that `or, and` are lower than `=`, which is lower than `||` and `&&`. If you're unfamiliar with programming language operator precedence think of [PEMDAS](https://en.wikipedia.org/wiki/Order_of_operations). When I get confused about precedence, I like to wrap operations in parenthesis so I can visualize the order things happen in. Here's the above example with parenthesis added to make it clear in what order things are happening:
+Note that `x` is false and `y` is true. Take a look at the [ruby operator precedence](https://ruby-doc.org/core-2.4.2/doc/syntax/precedence_rdoc.html) docs. The `or`, `and` operations are lower than `=`, which is lower than `||` and `&&`. If you're unfamiliar with programming language operator precedence think of [PEMDAS](https://en.wikipedia.org/wiki/Order_of_operations). When I get confused about precedence, I like to wrap operations in parenthesis so I can visualize the order of operations. Here's the above example with parenthesis added to show order of operations:
 
 ```ruby
 # `&&` has a higher precedence than `=`, so its evaluated first
@@ -127,7 +127,7 @@ end
 Foo.bar #=> 1
 ```
 
-You probably know `<<` as the shovel operator, useful for inserting objects into arrays (`[1, 2] << 3`). Seeing the strange `class << self` notation can be quite confusing, and the jargon associated with it (eigenclass, singleton class, metaclass) can be overwhelming. A good starting point is to know that this syntax lets you implement class methods. My above example can be rewritten as the slightly more familiar:
+You probably know `<<` as the shovel operator, useful for inserting objects into arrays (`[1, 2] << 3`). The `class << self` notation and the jargon associated with it (eigenclass, singleton class, metaclass) can be pretty obscure. A good starting point is to know that this syntax lets you implement class methods. My above example can be rewritten as the slightly more familiar:
 
 ```ruby
 class Foo
