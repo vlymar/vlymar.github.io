@@ -1,13 +1,28 @@
 ---
 ---
 
+* {
+  box-sizing: border-box;
+}
+
 body {
-  margin: 40px auto;
-  max-width: 650px;
-  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  line-height: 1.75;
   font-size: 18px;
   color: #444;
-  padding: 0 10px;
+}
+
+header, main {
+  margin: 0px auto;
+  max-width: 600px;
+
+}
+
+@media screen and (max-width: 640px) {
+  header, main {
+    padding: 0 20px;
+  }
 }
 
 header {
@@ -16,10 +31,33 @@ header {
   }
 }
 
+
 h1, h2, h3 {
   font-family: sans-serif;
 }
 
 a {
   text-decoration: none;
+}
+
+p {
+  margin: 0 0 2rem 0;
+  word-break: break-word;
+}
+
+// https://css-tricks.com/snippets/css/simple-and-nice-blockquote-styling/
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+
+blockquote p {
+  display: inline;
+}
+
+pre code {
+  display: block;
+  overflow-x: auto;
 }
