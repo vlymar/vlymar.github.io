@@ -1,7 +1,7 @@
 ---
-title: "Some Ruby Patterns"
+title: "Knowing Ruby Well"
 layout: post
-date: 2018-05-16
+date: 2018-05-26
 ---
 > Then they come up to me and say, "I was surprised by this feature of the language, so therefore Ruby violates the principle of least surprise." Wait. Wait. The principle of least surprise is not for you only. The principle of least surprise means principle of least my surprise. And it means the principle of least surprise after you learn Ruby very well.
 >  - Yukihiro Matsumoto [[source](https://www.artima.com/intv/ruby4.html)]
