@@ -1,4 +1,4 @@
-exclude: ['README.md', 'Gemfile', 'Gemfile.lock', 'CNAME']
+exclude: ['README.md', 'Gemfile', 'Gemfile.lock']
 
 excerpt_separator: "<!--more-->"
 
