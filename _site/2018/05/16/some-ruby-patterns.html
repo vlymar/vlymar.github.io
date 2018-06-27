@@ -5,6 +5,7 @@
     <title>Victor's Site</title>
     <link rel="stylesheet" href="/css/main.css" >
     <link href="/css/syntax.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body><header>
     <a href="/">
@@ -14,8 +15,7 @@
 
 
 <main class="page-content">
-            <div class="wrapper">
-                <article>
+          <article>
 
     <header>
         <h1>Some Ruby Patterns</h1>
@@ -24,11 +24,8 @@
     <div>
         <blockquote>
   <p>Then they come up to me and say, “I was surprised by this feature of the language, so therefore Ruby violates the principle of least surprise.” Wait. Wait. The principle of least surprise is not for you only. The principle of least surprise means principle of least my surprise. And it means the principle of least surprise after you learn Ruby very well.</p>
-</blockquote>
-
-<blockquote>
   <ul>
-    <li>Yukihiro Matsumoto (<a href="https://www.artima.com/intv/ruby4.html">https://www.artima.com/intv/ruby4.html</a>)</li>
+    <li>Yukihiro Matsumoto [<a href="https://www.artima.com/intv/ruby4.html">source</a>]</li>
   </ul>
 </blockquote>
 
@@ -210,7 +207,7 @@
 <span class="no">Foo</span><span class="p">.</span><span class="nf">bar</span> <span class="c1">#=&gt; 1</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>You probably know <code class="highlighter-rouge">&lt;&lt;</code> as the shovel operator, useful for inserting objects into arrays (<code class="highlighter-rouge">[1, 2] &lt;&lt; 3</code>). Seeing the strange <code class="highlighter-rouge">class &lt;&lt; self</code> notation can be quite confusing, and the jargon associated with it (eigenclass, singleton class, metaclass) can be overwhelming. A good starting point is to know that this syntax lets you implement class methods. My above example can be rewritten as:</p>
+<p>You probably know <code class="highlighter-rouge">&lt;&lt;</code> as the shovel operator, useful for inserting objects into arrays (<code class="highlighter-rouge">[1, 2] &lt;&lt; 3</code>). Seeing the strange <code class="highlighter-rouge">class &lt;&lt; self</code> notation can be quite confusing, and the jargon associated with it (eigenclass, singleton class, metaclass) can be overwhelming. A good starting point is to know that this syntax lets you implement class methods. My above example can be rewritten as the slightly more familiar:</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -268,7 +265,7 @@
 <span class="no">ParentClass</span><span class="p">.</span><span class="nf">count</span> <span class="c1">#=&gt; 10</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>Did you expect calling <code class="highlighter-rouge">set_count</code> on the <code class="highlighter-rouge">Child</code> class to update the count in the <code class="highlighter-rouge">Parent</code> class? <code class="highlighter-rouge">@@</code> variables aren’t class variables, they’re <em>class heirarchy variables</em>. They almost behave more like a global variables across the class hierarchy than as a class variable.</p>
+<p>Did you expect calling <code class="highlighter-rouge">set_count</code> on the <code class="highlighter-rouge">Child</code> class to update the count in the <code class="highlighter-rouge">Parent</code> class? <code class="highlighter-rouge">@@</code> variables aren’t class variables, they’re <em>class heirarchy variables</em>. They almost behave more like global variables across the class hierarchy than as a class variable.</p>
 
 <p>So what do you do if you want class variable semantics in ruby?</p>
 
@@ -314,13 +311,12 @@
 <span class="no">ChildClass</span><span class="p">.</span><span class="nf">count</span> <span class="c1">#=&gt; 10</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>There’s a ton of great content out their explaining eigenclasses. Here’s a good place to start: <a href="https://www.devalot.com/articles/2008/09/ruby-singleton">https://www.devalot.com/articles/2008/09/ruby-singleton</a></p>
+<p>There’s a ton of great content out there explaining eigenclasses. Here’s a good place to start: <a href="https://www.devalot.com/articles/2008/09/ruby-singleton">https://www.devalot.com/articles/2008/09/ruby-singleton</a>.</p>
 
     </div>
 
 </article>
 
-            </div>
         </main>
     </body>
 
