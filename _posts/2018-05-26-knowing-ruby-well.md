@@ -52,7 +52,7 @@ require 'date'
 
 class Person < Struct.new(:name, :birthdate)
   def birth_year
-	birthdate.year
+    birthdate.year
   end
 end
 
@@ -78,8 +78,7 @@ end
 c = [1, 2]
 foo(*c) #=> "1, 2]
 
-# double splat
-
+# Double splat
 def bar(a:, b:)
   "#{a}, #{b}"
 end
