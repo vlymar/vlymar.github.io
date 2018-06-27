@@ -29,6 +29,10 @@ header {
   a {
     color: inherit;
   }
+
+  span {
+    font-style: italic;
+  }
 }
 
 
@@ -38,6 +42,10 @@ h1, h2, h3 {
 
 a {
   text-decoration: none;
+}
+
+a.more {
+  font-weight: bold;
 }
 
 p {
