@@ -2,6 +2,8 @@ exclude: ['README.md', 'Gemfile', 'Gemfile.lock']
 
 excerpt_separator: "<!--more-->"
 
+permalink: /:categories/:title
+
 markdown: kramdown
 
 highlighter: rouge
