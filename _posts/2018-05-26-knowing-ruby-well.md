@@ -26,7 +26,7 @@ foo == 1  #=> true
 See also: `&&=`.
 
 ### Converting symbols to procs
-One of the less intuitive patterns in Ruby is `&:symbol`, which is shorthand for `Symbol#to_proc` ([documentation]([https://ruby-doc.org/core-2.5.1/Symbol.html#method-i-to%5C_proc])). 
+One of the less intuitive patterns in Ruby is `&:symbol`, which is shorthand for `Symbol#to_proc` ([documentation](https://ruby-doc.org/core-2.5.1/Symbol.html#method-i-to%5C_proc)). 
 
 ```ruby
 [1, 2, 3].map(&:to_s) #=> ["1", "2", "3"]
