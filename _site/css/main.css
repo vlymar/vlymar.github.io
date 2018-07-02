@@ -21,3 +21,6 @@ blockquote { background: #f9f9f9; border-left: 10px solid #ccc; margin: 1.5em 10
 blockquote p { display: inline; }
 
 pre code { display: block; overflow-x: auto; }
+
+.post-header { margin-bottom: 2em; }
+.post-header h1 { margin-bottom: 0.25em; }

@@ -10,11 +10,11 @@ layout: default
 
 <article>
     <header>
-        <h3>
+        <h1>
             <a href="{{ post.url | relative_url }}">
                 {{ post.title | escape }}
             </a>
-        </h3>
+        </h1>
         <!-- <span> {{ post.date | date: "%Y-%m-%d" }} </span> -->
     </header>
 
@@ -22,6 +22,8 @@ layout: default
 
     <a class="more" href="{{ post.url | relative_url }}">Read more</a>
 </article>
+
+<hr>
 
 
 {%- endfor -%}

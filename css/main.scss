@@ -35,7 +35,6 @@ header {
   }
 }
 
-
 h1, h2, h3 {
   font-family: sans-serif;
 }
@@ -69,3 +68,13 @@ pre code {
   display: block;
   overflow-x: auto;
 }
+
+
+.post-header {
+  margin-bottom: 2em;
+
+  h1 {
+    margin-bottom: 0.25em;
+  }
+}
+
