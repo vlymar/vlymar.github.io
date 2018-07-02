@@ -21,7 +21,7 @@ You're patting yourself on the back for that slick one-liner you just got right 
 ```
 
 ### `; nil` for your sanity
-A common irb workflow is to iteratively build up a short program while saving intermediate variables along the way. Assignment (`=`) is an expression in ruby [^1](#), which means assignment returns the value that was assigned. If you're assigning a large object, you might be stuck for a while watching output scroll by. 
+A common irb workflow is to iteratively build up a short program while saving intermediate variables along the way. Assignment (`=`) is an expression in ruby [^1], which means assignment returns the value that was assigned. If you're assigning a large object, you might be stuck for a while watching output scroll by. 
 
 Rails example:
 ```ruby
@@ -83,5 +83,8 @@ require 'pp' # pretty printing
 IRB.conf[:AUTO_INDENT] = true
 ```
 
+<br>
 
-[^1](%20) Everything is an expression in Ruby.
+---
+
+[^1]: Everything is an expression in Ruby.
