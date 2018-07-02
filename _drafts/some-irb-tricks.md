@@ -29,11 +29,11 @@ Rails example:
 => < 30 seconds of ActiveRecord objects being printed to the console... >
 ```
 
-My workaround is to append `; nil` to each line. The assignment still happens, but the REPL will quickly print `nil`, letting you keep working on your program. This is extra nice when you're building up an Active Record query because AR queries are lazily evaluated. When you add `; nil` after the AR query assignment, the query won't be evaluated until you print or use the results.
+My workaround is to append `; nil` to each line. The assignment still happens, but the REPL will quickly print `nil`, letting you keep working on your program. This is extra nice when you're building up an Active Record query because AR queries are lazily evaluated. When you add `; nil` after the AR query assignment, the query won't be executed until you print or use the results.
 
 Example:
 ```ruby
->bobs = Users.where(name: "Bob"); nil
+> bobs = Users.where(name: "Bob"); nil
 => nil
 
 > adult_bobs = bobs.where("age > ?", 30); nil
@@ -61,7 +61,7 @@ Ruby has the most intuitive and comprehensive standard library I've ever seen. I
 
 Usually the bulk of the methods I'm trying to filter out belong to `Object`, so I'll just subtract `Object.methods` instead of typing out `SomeKlass.superclass.methods`.
 
-Note that the previous above only returns `Array`'s class methods. To get the instance methods:
+Note that the previous example only returns `Array`'s class methods. To get the instance methods:
 
 ```ruby
 > arr_methods = Array.new.methods - Object.new.methods
@@ -71,10 +71,10 @@ Note that the previous above only returns `Array`'s class methods. To get the in
 
 Sometime's I'll just `sort` and scan the methods. Other time's I have a sense of what I'm looking for and I'll `Array#grep`. Two things worth mentioning:
 1. [Ruby-doc.org](https://ruby-doc.org/core-2.5.1/Array.html) is a fantastic source of documentation.
-2. [Pry](http://pryrepl.org/) is an even better way to introspect on Ruby classes (and much more).
+2. [Pry](http://pryrepl.org/) is a better way to introspect on Ruby classes.
 
 ### .irbrc goodies
-If you find yourself requiring the libraries over and over, or re-defining the same helper methods, throw them into an `.irbrc` file in your home directory. Here's my barebones one to start you off with some goodies:
+If you find yourself requiring the same libraries over and over, or re-defining the same helper methods, throw them into an `.irbrc` file in your home directory. Here's a barebones one to start you off with some goodies:
 
 ```ruby
 require 'irb/completion' # tab completion!
