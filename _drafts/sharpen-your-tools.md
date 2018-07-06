@@ -15,19 +15,19 @@ I'm going to document my exploration of the ruby test runner code, and my attemp
 
 First things first - lets find an entry point. One of my favorite features of Spacemacs is command discoverability and self-documentation. I've already learned that `, t b`[^2] runs all the tests in the buffer...But what code does it execute? Lets try that again, slower.
 
-![](Screen%20Shot%202018-07-02%20at%205.15.10%20PM.png)
+<!-- ![](Screen%20Shot%202018-07-02%20at%205.15.10%20PM.png) -->
 
 In this screencap I've typed `, t` and paused. Now we see the functions bound to the keyboard shortcuts. `b` is bound to `ruby-test-run`, so thats our entry point.
 
 If you have a function name, the next step is to use Emac's help built in functionality. With Spacemacs you can get to it with `SPC h d f`[^3]. Now type in the function you want help with and hit enter.
 
-![](Screen%20Shot%202018-07-02%20at%205.20.21%20PM.png)
+<!-- ![](Screen%20Shot%202018-07-02%20at%205.20.21%20PM.png) -->
 
 Here we see the file the function is defined in, the function's signature, and some documentation.
 
 Get your cursor over `ruby-test-mode.el` and hit enter. You'll instantly be taken to the definition location of the function :)
 
-```lisp
+```common_lisp
 ;;;###autoload
 (defun ruby-test-run ()
   "Run the current buffer's file as specification or unit test."
@@ -41,7 +41,7 @@ Get your cursor over `ruby-test-mode.el` and hit enter. You'll instantly be take
 
 This code handles a bit of plumbing but since we're laser focused on just the command being run we can hone in on `(ruby-test-run-command (ruby-test-command filename))`.  `ruby-test-command` looks like promising, so lets check it out. Move your cursor over it and run `gd` to jump to its definition.
 
-```lisp
+```common_lisp
 (defun ruby-test-command (filename &optional line-number)
   "Return the command to run a unit test or a specification depending on the FILENAME and LINE-NUMBER."
   (cond ((ruby-test-spec-p filename)
@@ -53,7 +53,7 @@ This code handles a bit of plumbing but since we're laser focused on just the co
 
 This looks like a conditional that determines whether it should dispatch to RSpec or Test::Unit. We're only interested in RSpec in the moment so lets jump into `ruby-test-spec-command`.
 
-```lisp
+```common_lisp
 (defun ruby-test-spec-command (filename &optional line-number)
   "Return command to run spec in FILENAME at LINE-NUMBER."
   (let ((command
@@ -69,7 +69,7 @@ This looks like a conditional that determines whether it should dispatch to RSpe
 
 We're close now. I can feel it. Lets look at `ruby-test-rspec-option`:
 
-```lisp
+```common_lisp
 (defcustom ruby-test-rspec-options
   '("-b")
   "Pass extra command line options to RSpec when running specs."
@@ -82,7 +82,7 @@ Boom! This passes `-b` into the command, filling our test buffer with dozens of 
 
 All thats left now is to override the value for this variable in your `.spacemacs`. (`SPC f e d` takes you right to it). Jump to your `dotspacemacs/user-config` section and add the following:
 
-```lisp
+```common_lisp
 ;; disable rspec backtrace (-b) option
 (setq ruby-test-rspec-options '())
 ```
