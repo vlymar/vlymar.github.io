@@ -1,7 +1,7 @@
 ---
 title: 'Sharpen Your Tools'
 layout: post
-date: 2018-07-05
+date: 2018-07-11
 category: 'posts'
 ---
 
