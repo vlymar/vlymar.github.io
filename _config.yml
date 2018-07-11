@@ -22,7 +22,6 @@ kramdown:
     css_class: 'highlight'
     #line_numbers: true # bad idea, spans don't need linenos and would inherit this option
     span:
-      disable: true
       # line_numbers: false
     block:
       line_numbers: true
