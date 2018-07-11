@@ -5,23 +5,25 @@ date: 2018-07-05
 category: 'posts'
 ---
 
-In this one I explore Emacs self-documentation and customization features to make my IDE just a bit better.
+In this one I explore Emacs's self-documentation and customization features to make my IDE just a bit better.
 
 <!--more-->
 
-I've been meaning to do this for a while but have been stuck in the "tar pit of immediacy." [^1] I do a lot of Rails development in Spacemacs and I love how easy it is to run specs and view the output. With a spec buffer open `, t b` opens a compilation buffer with the test output. The problem is the output is not very space efficient. It runs rspec with the `-b` flag, which includes the full error backtrace. A simple failure in a single spec can easily have ~50 lines of traceback, most of it useless.
+Spacemacs is a great Rails IDE. With a spec file open `, t b` opens the compilation buffer and runs the tests. The problem is the output is not very space efficient. It runs rspec with the `-b` flag, which includes the full error backtrace. A simple failure in a single spec can easily have ~50 lines of traceback, most of it useless.
 
-I'm going to document my exploration of the ruby test runner code, and my attempt to make the output more appropriate for Spacemacs.
+![annoying-trace]({{ "/assets/img/posts/sharpen-your-tools/annoying-trace.png" | absolute_url }})
 
-First things first - lets find an entry point. One of my favorite features of Spacemacs is command discoverability and self-documentation. I've already learned that `, t b`[^2] runs all the tests in the buffer...But what code does it execute? Lets try that again, slower.
+I'm going to document my exploration of the Emacs ruby test runner code, and my attempt to make the output more appropriate for Spacemacs.
 
-<!-- ![](Screen%20Shot%202018-07-02%20at%205.15.10%20PM.png) -->
+First things first - lets find an entry point. One of my favorite features of Spacemacs is command discoverability and self-documentation. I already know that `, t b`[^1] runs all the tests in the buffer...But what code does it execute? Lets try that again, slower.
 
-In this screencap I've typed `, t` and paused. Now we see the functions bound to the keyboard shortcuts. `b` is bound to `ruby-test-run`, so thats our entry point.
+![command-discovery]({{ "/assets/img/posts/sharpen-your-tools/command-discovery.png" | absolute_url }})
 
-If you have a function name, the next step is to use Emac's help built in functionality. With Spacemacs you can get to it with `SPC h d f`[^3]. Now type in the function you want help with and hit enter.
+Type `, t` and pause. Now we see that if we added `b` we'd execute `ruby-test-run`, so thats our entry point.
 
-<!-- ![](Screen%20Shot%202018-07-02%20at%205.20.21%20PM.png) -->
+If you have a function name, the next step is to use Emac's built in help functionality. With Spacemacs you can get to it with `SPC h d f`[^2]. Now type in the function you want help with and hit enter.
+
+![ruby-test-run-docs]({{ "/assets/img/posts/sharpen-your-tools/ruby-test-run-docs.png" | absolute_url }})
 
 Here we see the file the function is defined in, the function's signature, and some documentation.
 
@@ -39,7 +41,7 @@ Get your cursor over `ruby-test-mode.el` and hit enter. You'll instantly be take
 	  (message ruby-test-not-found-message))))
 ```
 
-This code handles a bit of plumbing but since we're laser focused on just the command being run we can hone in on `(ruby-test-run-command (ruby-test-command filename))`.  `ruby-test-command` looks like promising, so lets check it out. Move your cursor over it and run `gd` to jump to its definition.
+This code handles a bit of plumbing but since we're laser focused on just the command being run we can hone in on `(ruby-test-run-command (ruby-test-command filename))`.  `ruby-test-command` looks like promising, so lets check it out. Move your cursor over it and type `gd` to jump to its definition.
 
 ```common_lisp
 (defun ruby-test-command (filename &optional line-number)
@@ -67,7 +69,7 @@ This looks like a conditional that determines whether it should dispatch to RSpe
 	(format "%s %s %s" command (mapconcat 'identity options " ") filename)))
 ```
 
-We're close now. I can feel it. Lets look at `ruby-test-rspec-option`:
+We're close now. I can feel it. Lets look at `ruby-test-rspec-options`:
 
 ```common_lisp
 (defcustom ruby-test-rspec-options
@@ -78,7 +80,10 @@ We're close now. I can feel it. Lets look at `ruby-test-rspec-option`:
   :group 'ruby-test)
 ```
 
-Boom! This passes `-b` into the command, filling our test buffer with dozens of lines of trash. But what's `defcustom`? As an Emacs newbie I'd never seen that before so I googled it and landed on it's [docs](https://www.gnu.org/software/emacs/manual/html_node/eintr/defcustom.html). Turns out Emacs has a  GUI config system called the "customization interface." `defcustom` is a function for adding config parameters along with their default values and setter functions.
+Boom! This passes `-b` into the command, filling our test buffer with dozens of lines of trash. But what's `defcustom`? As an Emacs newbie I'd never seen that before so I googled it and landed on its [docs](https://www.gnu.org/software/emacs/manual/html_node/eintr/defcustom.html). Turns out Emacs has a  GUI config system called the "customization interface." `defcustom` is a function for adding config parameters along with their default values and setter functions.
+
+TODO: resume here --->
+At this point you could use the customization GUI to modify the value for `ruby-test-rspec-options`. My preference at the moment is to use text based config
 
 All thats left now is to override the value for this variable in your `.spacemacs`. (`SPC f e d` takes you right to it). Jump to your `dotspacemacs/user-config` section and add the following:
 
@@ -89,12 +94,14 @@ All thats left now is to override the value for this variable in your `.spacemac
 
 Now reload your config (`SPC f e R`) and we're done!
 
+![rspec-no-backtrace]({{ "/assets/img/posts/sharpen-your-tools/rspec-no-backtrace.png" | absolute_url }})
+
 ### Things that didn't make it into this post
 1. A discussion of the tradeoffs between `set`, `custom-set-variables`, `customize-set-variable`. This is a bit of a rabbit hole. In short - if the variable in question uses a setter function, `setq` won't cut it. You'd know because `defcustom` would have a `:set` argument.
 2. Instead of reading the code you can use a debugger. Try `M-x debug-on-entry`, then enter the function name you want to trace.
 
 **Reference**
-[^1]: https://blog.aaronbieber.com/2014/02/12/sharpening-your-blades.html
-[^2]: `,` is a shortcut for `SPC m`, where your major mode keybinds are.
-[^3]: `SPC h` is a good starting point for exploration if you're new to Spacemacs.
-[https://confreaks.tv/videos/cascadiaruby2011-the-unix-chainsaw](https://confreaks.tv/videos/cascadiaruby2011-the-unix-chainsaw)
+
+[^1]: `,` is a shortcut for `SPC m`, where your major mode keybinds are.
+[^2]: `SPC h` is a good starting point for exploration if you're new to Spacemacs.
+
