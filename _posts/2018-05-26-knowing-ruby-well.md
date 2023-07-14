@@ -14,7 +14,7 @@ Here's a grab bag of patterns I've picked up over 4 years of working with Ruby.
 ---
 
 ### Or-Equals (`||=`)
-Commonly used to conditionally assign a variable who's current value is nil. Takes advantage of the fact that `nil` evaluates as `false` in Ruby.
+Commonly used to conditionally assign a variable whose current value is nil. Takes advantage of the fact that `nil` evaluates as `false` in Ruby.
 
 ```ruby
 foo = nil
