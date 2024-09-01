@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+// const allPosts = await Astro.glob('./posts/*.md');
+const pageTitle = 'Blog'
+
+import { getCollection, getEntry } from 'astro:content';
+
+// Get all entries from a collection.
+// Requires the name of the collection as an argument.
+// Example: retrieve `src/content/blog/**`
+const allBlogPosts = await getCollection('blog');
+---
+
+<BaseLayout pageTitle={pageTitle}>
+    <h2> reads </h2>
+
+    {allBlogPosts.map((post) => <li><a href={`/blog/${post.slug}`}>{post.data.title}</a></li>)}
+</BaseLayout>
