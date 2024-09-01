@@ -1,4 +1,28 @@
-html {
+@tailwind base;
+
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  a {
+    @apply text-blue-600 underline;
+  }
+}
+
+@tailwind components;
+
+@tailwind utilities;
+
+/* html {
   background-color: #f1f5f9;
   font-family: sans-serif;
 }
@@ -18,10 +42,10 @@ body {
 h1 {
   margin: 1rem 0;
   font-size: 2.5rem;
-}
+} */
 
 /* nav styles */
-.hamburger {
+/* .hamburger {
   padding-right: 20px;
   cursor: pointer;
 }
@@ -79,4 +103,4 @@ h1 {
   .hamburger {
     display: none;
   }
-}
+} */

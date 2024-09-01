@@ -7,3 +7,7 @@
 - `pnpm create astro@latest`
 - `npx astro telemetry disable`
 - `pnpm run dev`
+- went thru blog post tutorial
+- moved blog posts into 'content collection'
+- `pnpm astro add tailwind`
+- `pnpm install -D @tailwindcss/typography`
