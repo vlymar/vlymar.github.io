@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: "Some IRB Tricks"
 published: 2018-07-01
 ---

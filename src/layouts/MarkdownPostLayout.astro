@@ -1,15 +1,20 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+const pageHeader = 'Blog'
 const { frontmatter } = Astro.props;
----
-<BaseLayout>
-    <h1>{frontmatter.title}</h1>
-    <p>Published on {frontmatter.published}</p>
 
-    <slot />
+// format date as YYYY-MM-DD
+const shortDate = new Date(frontmatter.published).toISOString().split('T')[0]
+---
+<BaseLayout pageTitle={frontmatter.title} pageHeader={pageHeader}>
+  <div class="">
+    <div class="flex justify-between items-center">
+      <h1 class="my-4 text-left">{frontmatter.title}</h1>
+      <p class="text-gray-800 text-right">{shortDate}</p>
+    </div>
+
+    <div class="font-serif leading-loose">
+      <slot />
+    </div>
+  </div>
 </BaseLayout>
-<!-- <style>
-  a {
-    color: #00539F;
-  }
-</style> -->

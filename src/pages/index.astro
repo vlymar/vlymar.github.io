@@ -1,16 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const pageTitle = "Victor's Blog"
-const blogPosts = await getCollection('blog');
+const pageTitle = "victorlymar.com"
+
+return Astro.redirect('/blog');
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-    {
-        blogPosts.map((post) =>
-         <li>
-            <a href={`/blog/${post.slug}`}>{post.data.title}</a>
-        </li>)
-    }
-</BaseLayout>
+<BaseLayout pageTitle={pageTitle} />

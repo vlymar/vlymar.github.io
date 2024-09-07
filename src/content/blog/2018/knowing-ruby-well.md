@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: 'Knowing Ruby Well'
 published: 2018-05-26
 ---

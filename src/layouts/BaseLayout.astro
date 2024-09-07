@@ -2,7 +2,8 @@
 // import Header from '../components/Header.astro';
 // import Footer from '../components/Footer.astro';
 import '../styles/global.css';
-const { pageTitle } = Astro.props;
+const { pageTitle, pageHeader } = Astro.props;
+const headerText = "victorlymar.com"
 ---
 <html lang="en">
   <head>
@@ -12,11 +13,23 @@ const { pageTitle } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
   </head>
-  <body>
-    <!-- <Header /> -->
-    <h1>{pageTitle}</h1>
-    <slot />
-    <!-- <Footer /> -->
+  <body class="bg-stone-50">
+    <!-- Use flexbox to align content -->
+    <div class="px-4 md:px-0 max-w-prose mx-auto">
+      <div class="my-12 flex flex-col">
+        <div class="my-6 fitems-center flex flex-row justify-between">
+          <div>
+            <h1 class="text-left text-2xl">{pageHeader}</h1>
+          </div>
+          <div>
+            <a href="/" class="no-underline text-inherit">
+              <h1 class="text-right text-2xl">{headerText}</h1>
+            </a>
+          </div>
+        </div>
+        <slot />
+      </div>
+    </div>
     <script>
       import "../scripts/menu.js";
     </script>

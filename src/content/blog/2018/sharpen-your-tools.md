@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: 'Sharpen Your Tools'
 published: 2018-07-11
 ---
