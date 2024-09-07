@@ -2,3 +2,5 @@ _drafts/.Ulysses-Group.plist
 _drafts/.Ulysses-favorites.plist
 
 _site
+node_modules
+.astro
