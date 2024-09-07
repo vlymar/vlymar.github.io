@@ -1,0 +1,40 @@
+---
+import '../styles/global.css';
+import Prose from '../components/Prose.astro';
+const { pageTitle } = Astro.props;
+const headerText = "Diminishing Returns"
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body class="bg-stone-50">
+    <!-- Use flexbox to align content -->
+    <div class="px-4 md:px-0 max-w-prose mx-auto">
+      <div class="my-12 flex flex-col">
+        <div class="my-6 fitems-center flex flex-row justify-end">
+          <!-- <div>
+            <a href="/blog" class="no-underline hover:underline">
+              <h1 class="text-left text-2xl">Blog</h1>
+            </a>
+          </div> -->
+          <div>
+            <a href="/" class="no-underline hover:underline">
+              <h1 class="text-right text-2xl">{headerText}</h1>
+            </a>
+          </div>
+        </div>
+        <Prose>
+          <slot />
+        </Prose>
+      </div>
+    </div>
+    <script>
+      import "../scripts/menu.js";
+    </script>
+  </body>
+</html>

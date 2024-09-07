@@ -1,0 +1,15 @@
+---
+import BaseLayout from './BaseLayout.astro';
+const { frontmatter } = Astro.props;
+
+// format date as YYYY-MM-DD
+const shortDate = new Date(frontmatter.published).toISOString().split('T')[0]
+---
+<BaseLayout pageTitle={frontmatter.title}>
+  <div class="flex justify-between items-center">
+    <h1 class="my-4 text-left">{frontmatter.title}</h1>
+    <p class="text-gray-800 text-right">{shortDate}</p>
+  </div>
+
+  <slot />
+</BaseLayout>
