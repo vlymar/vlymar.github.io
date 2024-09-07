@@ -1,9 +1,8 @@
 ---
-// import Header from '../components/Header.astro';
-// import Footer from '../components/Footer.astro';
 import '../styles/global.css';
-const { pageTitle, pageHeader } = Astro.props;
-const headerText = "victorlymar.com"
+import Prose from '../components/Prose.astro';
+const { pageTitle } = Astro.props;
+const headerText = "Diminishing Returns"
 ---
 <html lang="en">
   <head>
@@ -17,17 +16,21 @@ const headerText = "victorlymar.com"
     <!-- Use flexbox to align content -->
     <div class="px-4 md:px-0 max-w-prose mx-auto">
       <div class="my-12 flex flex-col">
-        <div class="my-6 fitems-center flex flex-row justify-between">
+        <div class="my-6 fitems-center flex flex-row justify-end">
+          <!-- <div>
+            <a href="/blog" class="no-underline hover:underline">
+              <h1 class="text-left text-2xl">Blog</h1>
+            </a>
+          </div> -->
           <div>
-            <h1 class="text-left text-2xl">{pageHeader}</h1>
-          </div>
-          <div>
-            <a href="/" class="no-underline text-inherit">
+            <a href="/" class="no-underline hover:underline">
               <h1 class="text-right text-2xl">{headerText}</h1>
             </a>
           </div>
         </div>
-        <slot />
+        <Prose>
+          <slot />
+        </Prose>
       </div>
     </div>
     <script>

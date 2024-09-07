@@ -1,11 +1,10 @@
 ---
-title: "Some IRB Tricks"
+title: Some IRB Tricks
 published: 2018-07-01
+excerpt: The REPL is a programmer's best friend.
 ---
 
 The REPL is a programmer's best friend.
-
-<!--more-->
 
 ### "`_`" evaluates to the REPL's last return value
 You're patting yourself on the back for that slick one-liner you just got right on the first try, but then you realize...._you forgot to add one to it_. Quickly re-use the return value of the previous expression with the `_` keyword.
@@ -81,8 +80,5 @@ require 'pp' # pretty printing
 IRB.conf[:AUTO_INDENT] = true
 ```
 
-<br>
-
----
 
 [^1]: Everything is an expression in Ruby.

@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 // const allPosts = await Astro.glob('./posts/*.md');
 const pageTitle = 'Blog'
-const pageHeader = pageTitle
 
 import { getCollection } from 'astro:content';
 
@@ -10,10 +9,32 @@ import { getCollection } from 'astro:content';
 // Requires the name of the collection as an argument.
 // Example: retrieve `src/content/blog/**`
 const allBlogPosts = await getCollection('blog');
+allBlogPosts.sort((a, b) => b.data.published - a.data.published);
+console.log(allBlogPosts)
+
+const blogPostsByYear = allBlogPosts.reduce((acc, post) => {
+    const year = post.data.published.getFullYear();
+    if (!acc[year]) {
+        acc[year] = [];
+    }
+    acc[year].push(post);
+    return acc;
+}, {});
 ---
 
-<BaseLayout pageTitle={pageTitle} pageHeader={pageHeader}>
-    {allBlogPosts.map(
-        (post) => <li><a href={`/blog/${post.slug}`}>{post.data.title}</a></li>
-    )}
+<BaseLayout pageTitle={pageTitle} >
+    {Object.entries(blogPostsByYear).sort((a, b) => b[0] - a[0]).map(([year, posts]) => (
+        <div>
+            <h3>{year}</h3>
+                {posts.map((post: any) => (
+                    <div class="my-8">
+                        <a href={`/blog/${post.slug}`} class="text-stone-700 text-lg font-bold no-underline hover:underline">
+                            {post.data.title}
+                        </a>
+                        <span class="text-sm ml-6 text-gray-600">{post.data.published.toISOString().split('T')[0]}</span>
+                        <p>{post.data.excerpt}</p>
+                    </div>
+                ))}
+        </div>
+    ))}
 </BaseLayout>

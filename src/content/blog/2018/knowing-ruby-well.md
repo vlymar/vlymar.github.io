@@ -1,16 +1,14 @@
 ---
-title: 'Knowing Ruby Well'
+title: Knowing Ruby Well
 published: 2018-05-26
+excerpt: A grab bag of patterns I picked up over 4 years of working with Ruby.
 ---
 > Then they come up to me and say, "I was surprised by this feature of the language, so therefore Ruby violates the principle of least surprise." Wait. Wait. The principle of least surprise is not for you only. The principle of least surprise means principle of least my surprise. And it means the principle of least surprise after you learn Ruby very well.
 >  - Yukihiro Matsumoto [[source](https://www.artima.com/intv/ruby4.html)]
 
 Here's a grab bag of patterns I've picked up over 4 years of working with Ruby.
 
-<!--more-->
-
----
-
+--
 ### Or-Equals (`||=`)
 Commonly used to conditionally assign a variable whose current value is nil. Takes advantage of the fact that `nil` evaluates as `false` in Ruby.
 
