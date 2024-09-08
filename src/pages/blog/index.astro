@@ -3,16 +3,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 // const allPosts = await Astro.glob('./posts/*.md');
 const pageTitle = 'Blog'
 
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 // Get all entries from a collection.
 // Requires the name of the collection as an argument.
 // Example: retrieve `src/content/blog/**`
-const allBlogPosts = await getCollection('blog');
-allBlogPosts.sort((a, b) => b.data.published - a.data.published);
-console.log(allBlogPosts)
+const allBlogPosts: CollectionEntry<'blog'>[] = await getCollection('blog');
+allBlogPosts.sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
 
-const blogPostsByYear = allBlogPosts.reduce((acc, post) => {
+const blogPostsByYear: Record<number, CollectionEntry<'blog'>[]> = allBlogPosts.reduce((acc, post) => {
     const year = post.data.published.getFullYear();
     if (!acc[year]) {
         acc[year] = [];
@@ -23,7 +22,7 @@ const blogPostsByYear = allBlogPosts.reduce((acc, post) => {
 ---
 
 <BaseLayout pageTitle={pageTitle} >
-    {Object.entries(blogPostsByYear).sort((a, b) => b[0] - a[0]).map(([year, posts]) => (
+    {Object.entries(blogPostsByYear).sort((a, b) => Number(b[0]) - Number(a[0])).map(([year, posts]) => (
         <div>
             <h3>{year}</h3>
                 {posts.map((post: any) => (
