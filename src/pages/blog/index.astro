@@ -23,10 +23,10 @@ const blogPostsByYear: Record<number, CollectionEntry<'blog'>[]> = allBlogPosts.
 
 <BaseLayout pageTitle={pageTitle} >
     {Object.entries(blogPostsByYear).sort((a, b) => Number(b[0]) - Number(a[0])).map(([year, posts]) => (
-        <div>
-            <h3>{year}</h3>
+        <div class="pb-1">
+            <h3 class="">{year}</h3>
                 {posts.map((post: any) => (
-                    <div class="my-8">
+                    <div class="py-3">
                         <a href={`/blog/${post.slug}`} class="text-stone-700 text-lg font-bold no-underline hover:underline">
                             {post.data.title}
                         </a>
