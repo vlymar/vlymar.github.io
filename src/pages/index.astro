@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const pageTitle = "victorlymar.com"
 
-return Astro.redirect('/blog');
+return Astro.rewrite("/blog")
 ---
 
 <BaseLayout pageTitle={pageTitle} />
