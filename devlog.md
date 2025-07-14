@@ -1,5 +1,10 @@
 # Dev Log
 
+## 2025-07-13
+- upgraded to astro v5
+- added mdx
+- added CaptionedImage component
+
 ## 2024-09-01
 - moved old jekyll site into v1/
 - added .tool-versions and updated to latest nodejs
