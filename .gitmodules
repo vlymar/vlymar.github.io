@@ -1,0 +1,3 @@
+[submodule "apps/rich-stitch"]
+	path = apps/rich-stitch
+	url = https://github.com/vlymar/rich-stitch.git
