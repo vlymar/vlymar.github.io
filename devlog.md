@@ -1,5 +1,9 @@
 # Dev Log
 
+## 2025-11-28
+- add apps/ dir
+- added rich-stitch under apps as git submodule
+
 ## 2025-07-13
 - upgraded to astro v5
 - added mdx
