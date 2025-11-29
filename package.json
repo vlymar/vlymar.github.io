@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build:rich-stitch": "cd apps/rich-stitch && npm install && npm run build && mkdir -p ../../public/rich-stitch && cp -r dist/* ../../public/rich-stitch/",
+    "build:rich-stitch": "cd apps/rich-stitch && npm install && npm run build && rm -rf ../../public/rich-stitch/assets && mkdir -p ../../public/rich-stitch && cp -r dist/* ../../public/rich-stitch/",
     "build": "npm run build:rich-stitch && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
